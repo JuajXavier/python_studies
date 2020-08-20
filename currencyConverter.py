@@ -1,6 +1,6 @@
 import requests
 import json
-import sys
+# import sys
 
 class Currency:
   def get_quotation(self, income, outcome):
@@ -8,47 +8,56 @@ class Currency:
     self.outcome = outcome
     quotationUrl = 'https://api.exchangeratesapi.io/latest?'
     quotationPayload = {
-      'symbols': self.income + ',' + self.outcome,
+      'symbols': self.outcome,
       'base': self.income
     }
 
     response = requests.get(quotationUrl, params=quotationPayload)
+    # print(type(response.text))
+    # print(response.text)
     quotation = json.loads(response.text)
-    return quotation['rates'][self.outcome]
+    # print(type(quotation))
+    # print(quotation)
+    return quotation['rates'][self.outcome] 
 
 menu = 0
+currency = Currency()
 
 while menu != 4:
-  menu = int(input("1 - Cotação do dólar/n2 - Conversão real para euro/n3 - Conversão euro para dólar/n4 - sair"))
-  if menu == 1:
-    print("O valor atual do dólar em reais é: ",get_quotation('BRL', 'USD'))
-
-""" def menu_loop():
-  # income = 'BRL'
-  # outcome = 'USD'
-  cur = Currency()
-  while(1):
-    print("1 - Cotação em dolar")
-    print("2 - Conversão de real para euro")
-    print("3 - Conversão de euro para dolar")
-    num = input("Digite o número da opção desejada:")
-    if num == 1:
-      income = 'BRL'
+  print(f"1 - Cotação do dólar\n2 - Conversão real para euro\n3 - Conversão euro para dólar\n4 - sair")
+  try:
+    menu = int(input("Digite uma opção: "))
+  # if menu == 1:
+  #   rate = currency.get_quotation('USD', 'BRL')
+  #   print("O valor atual do dólar em reais é: {}".format(rate))
+  # elif menu == 2:
+  #   rate = currency.get_quotation('EUR', 'BRL')
+  #   print("O valor atual do euro em reais é: {}".format(rate))
+  # elif menu == 3:
+  #   rate = currency.get_quotation('EUR', 'USD')
+  #   print("O valor atual do euro em dólar é: {}".format(rate))
+  # else:
+  #   print("Não é um número válido")
+    if menu == 1:
+      income = 'USD'
+      outcome = 'BRL'
+      rate = currency.get_quotation(income, outcome)
+      print("O valor atual do {} em {} é: {}".format(income, outcome, rate))
+    elif menu == 2:
+      income = 'EUR'
+      outcome = 'BRL'
+      rate = currency.get_quotation(income, outcome)
+      print("O valor atual do {} em {} é: {}".format(income, outcome, rate))
+      value = int(input("Digite um valor: "))
+      currencyExchange = value * rate
+      print("{} {} é igual a {:.2f} {}".format(value, income, currencyExchange, outcome))
+    elif menu == 3:
+      income = 'EUR'
       outcome = 'USD'
-      out_rate = cur.get_quotation(income, outcome)
-      print("{} to {}: {}".format(income, outcome, out_rate))
+      rate = currency.get_quotation(income, outcome)
+      print("O valor atual do {} em {} é: {}".format(income, outcome, rate))
+    else:
+      print("Não é um número válido")
 
-    elif num == 2:
-      income = ''
-    
-    elif num == 4:
-      print("Programa finalizado")
-      sys.exit(-1)
-  
-if __name__ == "__main__":
-  income = 'BRL'
-  outcome = 'USD'
-  cur = Currency(income)
-  out_rate = cur.get_quotation(outcome)
-
-  print("{} to {}: {}".format(income, outcome, out_rate)) """
+  except ValueError:
+    print("Não é um número")
